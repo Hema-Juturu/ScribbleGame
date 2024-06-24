@@ -7,7 +7,7 @@ const ColorSelector = ({ selectedColor, onColorChange }) => {
 
   return (
     <div>
-      <label htmlFor="colorPicker">Choose a color:</label>
+      <label htmlFor="colorPicker">Choose a color : </label>
       <input
         type="color"
         id="colorPicker"

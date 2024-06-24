@@ -43,10 +43,20 @@ const Dcanvas = () => {
   const handleColorChange = (color) => {
     setSelectedColor(color);
   };
-
+  const handleClearCanvas = () => {
+    if (context) {
+        const canvas=canvasRef.current;
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.fillStyle = 'white';
+    }
+  };
   return (
     <div>
+        <div style={{display:'flex',padding:'1em',justifyContent:'space-evenly'}}>
       <ColorSelector selectedColor={selectedColor} onColorChange={handleColorChange} />
+      <button onClick={handleClearCanvas}>Clear</button>
+      </div>
       <canvas
         ref={canvasRef}
         width={window.innerWidth}
