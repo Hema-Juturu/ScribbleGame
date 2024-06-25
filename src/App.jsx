@@ -1,4 +1,4 @@
-import './App.css'
+
 import Dcanvas from '/src/components/DCanvas'
 
 function App() {
