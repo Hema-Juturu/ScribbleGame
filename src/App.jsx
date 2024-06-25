@@ -1,5 +1,6 @@
+import './App.css'
+import Dcanvas from '/src/components/DCanvas'
 
-import Dcanvas from './Dcanvas';
 function App() {
   return (
     <div className="App">
@@ -8,4 +9,4 @@ function App() {
   );
 }
 
-export default App;
+export default App
