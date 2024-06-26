@@ -45,9 +45,10 @@ const Dcanvas = () => {
     };
 
     const handleMouseDown = (event) => {
+
         if (context) {
             saveCanvasState();
-            const { offsetX, offsetY } = event.nativeEvent;
+            const { offsetX, offsetY } = getCoords(event);
             context.strokeStyle = selectedColor;
             context.beginPath();
             context.moveTo(offsetX, offsetY);
@@ -56,14 +57,16 @@ const Dcanvas = () => {
     };
 
     const handleMouseMove = (event) => {
+    
         if (drawing && context) {
-            const { offsetX, offsetY } = event.nativeEvent;
+            const { offsetX, offsetY } = getCoords(event);
             context.lineTo(offsetX, offsetY);
             context.stroke();
         }
     };
 
     const handleMouseUp = () => {
+       
         if (drawing && context) {
             context.closePath();
             setDrawing(false);
@@ -83,6 +86,22 @@ const Dcanvas = () => {
             context.fillStyle = 'white';
         }
     };
+   const getCoords = (event) => {
+    if (event.touches && event.touches.length > 0) {
+        const touch = event.touches[0];
+        // const offsetX = touch.clientX - canvasRef.current.getBoundingClientRect().left;
+        // const offsetY = touch.clientY - canvasRef.current.getBoundingClientRect().top;
+                const offsetX = touch.clientX;
+        const offsetY = touch.clientY;
+    
+        return { offsetX, offsetY };
+    } else {
+        // const offsetX = event.clientX - canvasRef.current.getBoundingClientRect().left;
+        // const offsetY = event.clientY - canvasRef.current.getBoundingClientRect().top;
+        const {offsetX,offsetY}=event.nativeEvent;
+        return { offsetX, offsetY };
+    }
+};
 
     return (
         <div>
@@ -99,6 +118,9 @@ const Dcanvas = () => {
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
+                onTouchStart={handleMouseDown}
+                onTouchMove={handleMouseMove}
+                onTouchEnd={handleMouseUp}
             />
         </div>
     );
