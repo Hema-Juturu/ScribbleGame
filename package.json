@@ -5,8 +5,9 @@
   "scripts": {
     "local": "cd ./frontend && npm run dev",
     "dev": "nodemon ./backend/index.js",
-    "start": "node ./backend/index.js",
-    "build": "cd ./backend && npm install"
+    "build": "cd ./backend && npm install && cd ../frontend && npm install && npm run build",
+    "build:prod": "cd ./backend && npm install && cd ../frontend && npm install && npm run build && rm -rf node_modules",
+    "start": "npm run build && node ./backend/index.js"
   },
   "dependencies": {
     "nodemon": "^3.1.4"
