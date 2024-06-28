@@ -1,5 +1,4 @@
 import { useRef, useState, useEffect } from 'react';
-import ColorSelector from '/src/components/ColorSelector';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUndo, faRedo } from '@fortawesome/free-solid-svg-icons';
 
@@ -28,7 +27,7 @@ const Dcanvas = () => {
         const resize = () => {
             setDimensions({
                 width: window.innerWidth,
-                height: window.innerHeight - 100,
+                height: window.innerHeight,
             })
         }
         window.addEventListener('resize', resize)
@@ -89,11 +88,6 @@ const Dcanvas = () => {
             setDrawing(false);
         }
     };
-
-    const handleColorChange = (color) => {
-        setSelectedColor(color);
-    };
-
     const handleClearCanvas = () => {
         if (context) {
             saveCanvasState();
@@ -108,44 +102,52 @@ const Dcanvas = () => {
             const touch = event.touches[0];
             const offsetX = touch.clientX - canvasRef.current.getBoundingClientRect().left;
             const offsetY = touch.clientY - canvasRef.current.getBoundingClientRect().top;
-            // const offsetX = touch.clientX;
-            // const offsetY = touch.clientY;
-
+ 
             return { offsetX, offsetY };
         } else {
-            // const offsetX = event.clientX - canvasRef.current.getBoundingClientRect().left;
-            // const offsetY = event.clientY - canvasRef.current.getBoundingClientRect().top;
+          
             const { offsetX, offsetY } = event.nativeEvent;
             return { offsetX, offsetY };
         }
     };
 
     return (
-        <div className="w-screen h-screen">
-            <div style={{ display: 'flex', padding: '1em', justifyContent: 'space-evenly' }}>
-                <ColorSelector selectedColor={selectedColor} onColorChange={handleColorChange} />
-                <button onClick={handleUndo} disabled={undoStack.length === 0}><FontAwesomeIcon icon={faUndo} /></button>
-                <button onClick={handleRedo} disabled={redoStack.length === 0}><FontAwesomeIcon icon={faRedo} /></button>
-                <button
-                    className="px-4 py-2 a-center ring-2 ring-teal-400 rounded-lg bg-slate-800 text-slate-200 tracking-widest uppercase"
-                    style={{
-                        fontSize: 13,
-                    }}
-                    onClick={handleClearCanvas}
-                >Clear</button>
-            </div>
-            <canvas
-                ref={canvasRef}
-                width={dimensions.width}
-                height={dimensions.height}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onTouchStart={handleMouseDown}
-                onTouchMove={handleMouseMove}
-                onTouchEnd={handleMouseUp}
-            />
-        </div>
+
+        <div className="w-screen h-screen flex">
+   <div className="bg-gray-800 text-white w-20 flex-shrink-0 flex flex-col items-center justify-center">
+   <button className="text-white p-2" onClick={handleUndo} disabled={undoStack.length === 0} >
+        <FontAwesomeIcon icon={faUndo} />
+    </button>
+    <button className="text-white p-2 " onClick={handleRedo} disabled={redoStack.length === 0} >
+        <FontAwesomeIcon icon={faRedo} />
+    </button>
+    <button className="mb-5 rounded-full bg-red-400" style={{ width: '30px', height: '30px' }} onClick={() => setSelectedColor('#f87171')}></button>
+    <button className="mb-5 rounded-full bg-green-400" style={{ width: '30px', height: '30px' }} onClick={() => setSelectedColor('#4ade80')}></button>
+    <button className="mb-5 rounded-full bg-blue-400" style={{ width: '30px', height: '30px' }} onClick={() => setSelectedColor('#60a5fa')}></button>
+    <button className="mb-5 rounded-full bg-yellow-400" style={{ width: '30px', height: '30px' }} onClick={() => setSelectedColor('#facc15')}></button>
+    <button className="mb-5 rounded-full bg-black" style={{ width: '30px', height: '30px' }} onClick={() => setSelectedColor('#000')}></button>
+    <button className="mb-5 rounded-full bg-pink-400" style={{ width: '30px', height: '30px' }} onClick={() => setSelectedColor('#f472b6')}></button>
+    <button className="mb-5 rounded-full bg-purple-400" style={{ width: '30px', height: '30px' }} onClick={() => setSelectedColor('#c084fc')}></button>   
+    <button className="px-2 py-2 a-center ring-2 ring-teal-400 rounded-lg bg-slate-800 text-slate-200 tracking-widest uppercase"onClick={handleClearCanvas} >
+        Clear
+    </button>
+</div>
+    {/* Canvas */}
+    <div className="flex-1 relative">
+        <canvas
+            ref={canvasRef}
+            width={dimensions.width}
+            height={dimensions.height}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onTouchStart={handleMouseDown}
+            onTouchMove={handleMouseMove}
+            onTouchEnd={handleMouseUp}
+            className="absolute inset-0"
+        />
+    </div>
+</div>
     );
 };
 
