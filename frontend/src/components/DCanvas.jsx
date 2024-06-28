@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import ColorSelector from '/src/components/ColorSelector';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUndo, faRedo } from '@fortawesome/free-solid-svg-icons';
@@ -11,13 +11,31 @@ const Dcanvas = () => {
     const [undoStack, setUndoStack] = useState([]); // State to store canvas states for undo
     const [redoStack, setRedoStack] = useState([]); // State to store canvas states for redo
 
+    const [dimensions, setDimensions] = useState({
+        width: 0, height: 0
+    })
+
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         setContext(ctx);
-    }, []);
+    }, [dimensions]);
+
+
+    useEffect(() => {
+        const resize = () => {
+            setDimensions({
+                width: window.innerWidth,
+                height: window.innerHeight - 100,
+            })
+        }
+        window.addEventListener('resize', resize)
+        return () => {
+            window.removeEventListener('resize', resize)
+        }
+    }, [])
 
     const saveCanvasState = () => {
         const canvas = canvasRef.current;
@@ -45,7 +63,6 @@ const Dcanvas = () => {
     };
 
     const handleMouseDown = (event) => {
-
         if (context) {
             saveCanvasState();
             const { offsetX, offsetY } = getCoords(event);
@@ -57,7 +74,7 @@ const Dcanvas = () => {
     };
 
     const handleMouseMove = (event) => {
-    
+
         if (drawing && context) {
             const { offsetX, offsetY } = getCoords(event);
             context.lineTo(offsetX, offsetY);
@@ -66,7 +83,7 @@ const Dcanvas = () => {
     };
 
     const handleMouseUp = () => {
-       
+
         if (drawing && context) {
             context.closePath();
             setDrawing(false);
@@ -86,35 +103,41 @@ const Dcanvas = () => {
             context.fillStyle = 'white';
         }
     };
-   const getCoords = (event) => {
-    if (event.touches && event.touches.length > 0) {
-        const touch = event.touches[0];
-        // const offsetX = touch.clientX - canvasRef.current.getBoundingClientRect().left;
-        // const offsetY = touch.clientY - canvasRef.current.getBoundingClientRect().top;
-                const offsetX = touch.clientX;
-        const offsetY = touch.clientY;
-    
-        return { offsetX, offsetY };
-    } else {
-        // const offsetX = event.clientX - canvasRef.current.getBoundingClientRect().left;
-        // const offsetY = event.clientY - canvasRef.current.getBoundingClientRect().top;
-        const {offsetX,offsetY}=event.nativeEvent;
-        return { offsetX, offsetY };
-    }
-};
+    const getCoords = (event) => {
+        if (event.touches && event.touches.length > 0) {
+            const touch = event.touches[0];
+            const offsetX = touch.clientX - canvasRef.current.getBoundingClientRect().left;
+            const offsetY = touch.clientY - canvasRef.current.getBoundingClientRect().top;
+            // const offsetX = touch.clientX;
+            // const offsetY = touch.clientY;
+
+            return { offsetX, offsetY };
+        } else {
+            // const offsetX = event.clientX - canvasRef.current.getBoundingClientRect().left;
+            // const offsetY = event.clientY - canvasRef.current.getBoundingClientRect().top;
+            const { offsetX, offsetY } = event.nativeEvent;
+            return { offsetX, offsetY };
+        }
+    };
 
     return (
-        <div>
-            <div style={{ display: 'flex', padding: '1em', justifyContent:'space-evenly' }}>
+        <div className="w-screen h-screen">
+            <div style={{ display: 'flex', padding: '1em', justifyContent: 'space-evenly' }}>
                 <ColorSelector selectedColor={selectedColor} onColorChange={handleColorChange} />
                 <button onClick={handleUndo} disabled={undoStack.length === 0}><FontAwesomeIcon icon={faUndo} /></button>
-                <button onClick={handleRedo} disabled={redoStack.length === 0}><FontAwesomeIcon icon={faRedo}/></button>
-                <button onClick={handleClearCanvas}>Clear</button>
+                <button onClick={handleRedo} disabled={redoStack.length === 0}><FontAwesomeIcon icon={faRedo} /></button>
+                <button
+                    className="px-4 py-2 a-center ring-2 ring-teal-400 rounded-lg bg-slate-800 text-slate-200 tracking-widest uppercase"
+                    style={{
+                        fontSize: 13,
+                    }}
+                    onClick={handleClearCanvas}
+                >Clear</button>
             </div>
             <canvas
                 ref={canvasRef}
-                width={window.innerWidth}
-                height={window.innerHeight}
+                width={dimensions.width}
+                height={dimensions.height}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
