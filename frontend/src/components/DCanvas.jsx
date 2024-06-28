@@ -13,7 +13,7 @@ const Dcanvas = () => {
     const [dimensions, setDimensions] = useState({
         width: 0, height: 0
     })
-
+    
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
@@ -113,7 +113,7 @@ const Dcanvas = () => {
 
     return (
 
-        <div className="w-screen h-screen flex">
+        <div className="w-screen h-screen flex">     
    <div className="bg-gray-800 text-white w-20 flex-shrink-0 flex flex-col items-center justify-center">
    <button className="text-white p-2" onClick={handleUndo} disabled={undoStack.length === 0} >
         <FontAwesomeIcon icon={faUndo} />
@@ -134,6 +134,7 @@ const Dcanvas = () => {
 </div>
     {/* Canvas */}
     <div className="flex-1 relative">
+    <p className='absolute top-0 right-1/2 z-10 p-2'>Guess the word</p>
         <canvas
             ref={canvasRef}
             width={dimensions.width}
