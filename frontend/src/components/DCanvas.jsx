@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUndo, faRedo } from '@fortawesome/free-solid-svg-icons';
+import GuessWord from './GuessWord';
 
 const Dcanvas = () => {
     const canvasRef = useRef(null);
@@ -9,9 +10,9 @@ const Dcanvas = () => {
     const [selectedColor, setSelectedColor] = useState('#000000'); // Initial color is black
     const [undoStack, setUndoStack] = useState([]); // State to store canvas states for undo
     const [redoStack, setRedoStack] = useState([]); // State to store canvas states for redo
-
+    const guessWord = 'Subhadra';
     const [dimensions, setDimensions] = useState({
-        width: 0, height: 0
+        width: window.innerWidth, height: window.innerHeight
     })
     
     useEffect(() => {
@@ -134,7 +135,7 @@ const Dcanvas = () => {
 </div>
     {/* Canvas */}
     <div className="flex-1 relative">
-    <p className='absolute top-0 right-1/2 z-10 p-2'>Guess the word</p>
+    <div className='absolute top-0 right-1/2 z-10 p-2'><GuessWord inputString={guessWord}/></div>
         <canvas
             ref={canvasRef}
             width={dimensions.width}
