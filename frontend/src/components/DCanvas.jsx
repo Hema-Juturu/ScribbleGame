@@ -139,7 +139,7 @@ const Dcanvas = () => {
                 <canvas
                     ref={canvasRef}
                     width={dimensions.width - 84}
-                    height={dimensions.height - 4}
+                    height={dimensions.height - 84}
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
