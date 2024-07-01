@@ -114,7 +114,7 @@ const Dcanvas = () => {
     };
 
     return (
-        <div className="w-screen h-screen flex">
+        <div className="w-full h-full flex">
             <div className="bg-gray-800 text-white w-20 flex-shrink-0 flex flex-col items-center justify-center">
                 <button className="text-white p-2" onClick={handleUndo} disabled={undoStack.length === 0} >
                     <FontAwesomeIcon icon={faUndo} />
