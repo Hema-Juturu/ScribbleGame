@@ -21,7 +21,7 @@ const GuessWord = (props) => {
   }, [props.inputString, revealedCharacters]);
 
   return (
-    <div>
+    <span>
       {/* Map over the characters array and display revealed characters or underscore */}
       {props.inputString.split('').map((char, index) => (
         <span key={index}>
@@ -30,7 +30,7 @@ const GuessWord = (props) => {
         </span>
       ))}
       <sup>{  props.inputString.length}</sup>
-    </div>
+    </span>
   );
 };
 
