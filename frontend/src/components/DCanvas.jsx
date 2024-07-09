@@ -15,7 +15,22 @@ const Dcanvas = () => {
         width: window.innerWidth * 0.8,
         height: window.innerHeight * 0.8,
     })
-
+    
+    useEffect(() => {
+        const handleBeforeUnload = (event) => {
+          // Cancel the event
+          event.preventDefault();
+          // Chrome requires returnValue to be set
+          event.returnValue = '';
+        };
+        
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        
+        return () => {
+          window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+      }, []);
+      
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
