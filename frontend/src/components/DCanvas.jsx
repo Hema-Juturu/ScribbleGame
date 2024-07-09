@@ -64,6 +64,7 @@ const Dcanvas = () => {
     };
 
     const handleMouseDown = (event) => {
+        event.preventDefault();
         if (context) {
             saveCanvasState();
             const { offsetX, offsetY } = getCoords(event);
@@ -75,7 +76,7 @@ const Dcanvas = () => {
     };
 
     const handleMouseMove = (event) => {
-
+        event.preventDefault();
         if (drawing && context) {
             const { offsetX, offsetY } = getCoords(event);
             context.lineTo(offsetX, offsetY);
