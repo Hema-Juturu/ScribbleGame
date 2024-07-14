@@ -2,6 +2,8 @@ import { useRef, useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUndo, faRedo } from '@fortawesome/free-solid-svg-icons';
 import GuessWord from './GuessWord';
+import io from 'socket.io-client';
+
 
 const Dcanvas = () => {
     const canvasRef = useRef(null);
@@ -15,7 +17,12 @@ const Dcanvas = () => {
         width: window.innerWidth * 0.8,
         height: window.innerHeight * 0.8,
     })
+    const [socket, setSocket] = useState(null);
+
     
+  
+    
+
     useEffect(() => {
         const handleBeforeUnload = (event) => {
           // Cancel the event
@@ -53,6 +60,28 @@ const Dcanvas = () => {
         }
     }, [])
 
+    useEffect(() => {
+        const newSocket = io('http://localhost:4000');
+        newSocket.on('connect', () => {
+            console.log('Socket connected!');
+        });
+        newSocket.on('connect_error', (err) => {
+            console.error('Socket connection error:', err);
+        });
+        newSocket.on('disconnect', () => {
+            console.log('Socket disconnected!');
+        });
+    
+        setSocket(newSocket);
+    
+        return () => {
+            newSocket.disconnect();
+        };
+    }, []);
+    
+
+
+
     const saveCanvasState = () => {
         const canvas = canvasRef.current;
         const imgData = context.getImageData(0, 0, canvas.width, canvas.height);
@@ -87,6 +116,9 @@ const Dcanvas = () => {
             context.beginPath();
             context.moveTo(offsetX, offsetY);
             setDrawing(true);
+            if(socket){
+            socket.emit('drawing', { lastX: offsetX, lastY: offsetY });}
+            
         }
     };
 
@@ -96,6 +128,10 @@ const Dcanvas = () => {
             const { offsetX, offsetY } = getCoords(event);
             context.lineTo(offsetX, offsetY);
             context.stroke();
+            if(socket){
+            socket.emit('drawing', { lastX: offsetX, lastY: offsetY });
+            }
+        
         }
     };
 
@@ -104,6 +140,7 @@ const Dcanvas = () => {
         if (drawing && context) {
             context.closePath();
             setDrawing(false);
+            socket.emit('drawing-end');
         }
     };
     const handleClearCanvas = () => {

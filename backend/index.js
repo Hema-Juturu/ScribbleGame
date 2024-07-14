@@ -1,26 +1,66 @@
-import express from "express"
-import cors from "cors"
-import dotenv from "dotenv"
-import path from "path"
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import path from "path";
+import http from "http";
+import { Server as SocketServer } from "socket.io";
 
-dotenv.config()
+dotenv.config();
 
-const app = express()
-app.use(express.json())
-app.use(cors())
-const PORT = process.env.PORT || 4000
-const HOST = process.env.HOST || 'localhost'
+const app = express();
+const server = http.createServer(app);
+const io = new SocketServer(server);
 
-app.get('/api', (_, res) => {
-    res.status(200).json({
-        message: 'Api [scribble]'
-    })
-})
+// Middleware
+app.use(express.json());
+app.use(cors());
 
-const __dirname = path.resolve()
-app.use(express.static(path.join(__dirname, "/frontend/dist")))
+// Serve static files (assuming frontend is built and located in "/frontend/dist")
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, "/frontend/dist")));
+
+// Serve index.html for any other routes
 app.get("*", (_, res) =>
     res.sendFile(path.join(__dirname, "/frontend/dist/index.html"))
-)
+);
 
-app.listen(PORT, () => console.log(`visit http://${HOST}:${PORT}`))
+// API endpoint
+app.get('/api', (_, res) => {
+    res.status(200).json({
+        message: 'API is working!'
+    });
+});
+
+// Socket.io event handling
+io.on('connection', (socket) => {
+    console.log("a user connected:", socket.id);
+
+    socket.on('disconnect', () => {
+        console.log('user disconnected:', socket.id);
+    });
+
+    socket.on('drawing', (data) => {
+       
+        socket.broadcast.emit('drawing', data);
+    });
+
+    socket.on('drawing-end', () => {
+        socket.broadcast.emit('drawing-end');
+    });
+
+    socket.on('clear', () => {
+        socket.broadcast.emit('clear');
+    });
+});
+
+// Error handling for Socket.io
+io.engine.on("connection_error", (err) => {
+    console.error("Socket connection error:", err.message);
+});
+
+const PORT = process.env.PORT || 4000;
+const HOST = process.env.HOST || 'localhost';
+
+server.listen(PORT, () => {
+    console.log(`Server is running at http://${HOST}:${PORT}`);
+});
