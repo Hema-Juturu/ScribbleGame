@@ -51,6 +51,16 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('drawing-end');
     });
 
+    socket.on('saveCanvas',()=>{
+        socket.broadcast.emit('saveCanvas');
+    })
+
+    socket.on('handleUndo',()=>{
+        socket.broadcast.emit('handleUndo');
+    })
+    socket.on('handleRedo',()=>{
+        socket.broadcast.emit('handleRedo');
+    })
     socket.on('clear', () => {
         socket.broadcast.emit('clear');
     });

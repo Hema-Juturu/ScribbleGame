@@ -73,6 +73,7 @@ const Dcanvas = () => {
         newSocket.on('drawing-mouseDown', (data) => {
             if (context) {
                 context.beginPath();
+                context.strokeStyle = data.color;
                 context.moveTo(data.lastX, data.lastY);
             }
             setDrawing(true);
@@ -86,6 +87,28 @@ const Dcanvas = () => {
         })
         newSocket.on('clear', () => {
             handleClearCanvas();
+        })
+        newSocket.on('saveCanvas',()=>{
+            const canvas = canvasRef.current;
+            const imgData = context.getImageData(0, 0, canvas.width, canvas.height);
+        undoStack.push(imgData);
+        setUndoStack([...undoStack]);
+        })
+        newSocket.on('handleUndo',()=>{
+            if (undoStack.length > 0 && context) {
+                const lastState = undoStack.pop();
+                redoStack.push(context.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height));
+                setRedoStack([...redoStack]);
+                context.putImageData(lastState, 0, 0);
+            }
+        })
+        newSocket.on('handleRedo',()=>{
+            if (redoStack.length > 0 && context) {
+                const nextState = redoStack.pop();
+                undoStack.push(context.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height));
+                setUndoStack([...undoStack]);
+                context.putImageData(nextState, 0, 0);
+            }
         })
         setSocket(newSocket);
 
@@ -103,6 +126,10 @@ const Dcanvas = () => {
         const imgData = context.getImageData(0, 0, canvas.width, canvas.height);
         undoStack.push(imgData);
         setUndoStack([...undoStack]);
+        if(socket)
+        {
+            socket.emit('saveCanvas');
+        }
     };
 
     const handleUndo = () => {
@@ -111,6 +138,10 @@ const Dcanvas = () => {
             redoStack.push(context.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height));
             setRedoStack([...redoStack]);
             context.putImageData(lastState, 0, 0);
+            if(socket)
+            {
+                socket.emit('handleUndo');
+            }
         }
     };
 
@@ -120,6 +151,10 @@ const Dcanvas = () => {
             undoStack.push(context.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height));
             setUndoStack([...undoStack]);
             context.putImageData(nextState, 0, 0);
+            if(socket)
+            {
+                socket.emit('handleRedo');
+            }
         }
     };
 
@@ -133,7 +168,7 @@ const Dcanvas = () => {
             context.moveTo(offsetX, offsetY);
             setDrawing(true);
             if (socket) {
-                socket.emit('drawing-mouseDown', { lastX: offsetX, lastY: offsetY });
+                socket.emit('drawing-mouseDown', { lastX: offsetX, lastY: offsetY ,color:selectedColor});
             }
         }
     };
@@ -145,7 +180,7 @@ const Dcanvas = () => {
             context.lineTo(offsetX, offsetY);
             context.stroke();
             if (socket) {
-                socket.emit('drawing-mouseMove', { lastX: offsetX, lastY: offsetY });
+                socket.emit('drawing-mouseMove', { lastX: offsetX, lastY: offsetY,color:selectedColor });
             }
         }
     };

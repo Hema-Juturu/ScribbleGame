@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { PropTypes } from "prop-types"
+import { useState, useEffect } from 'react';
 
 const GuessWord = (props) => {
   const [revealedCharacters, setRevealedCharacters] = useState([]);
@@ -29,13 +30,13 @@ const GuessWord = (props) => {
           {' '}
         </span>
       ))}
-      <sup>{  props.inputString.length}</sup>
+      <sup>{props.inputString.length}</sup>
     </span>
   );
 };
 
+GuessWord.propTypes = {
+  inputString: PropTypes.string,
+}
+
 export default GuessWord;
-
-
-
-
