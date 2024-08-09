@@ -19,25 +19,21 @@ const Dcanvas = () => {
     })
     const [socket, setSocket] = useState(null);
 
-    
-  
-    
-
     useEffect(() => {
         const handleBeforeUnload = (event) => {
-          // Cancel the event
-          event.preventDefault();
-          // Chrome requires returnValue to be set
-          event.returnValue = '';
+            // Cancel the event
+            event.preventDefault();
+            // Chrome requires returnValue to be set
+            event.returnValue = '';
         };
-        
+
         window.addEventListener('beforeunload', handleBeforeUnload);
-        
+
         return () => {
-          window.removeEventListener('beforeunload', handleBeforeUnload);
+            window.removeEventListener('beforeunload', handleBeforeUnload);
         };
-      }, []);
-      
+    }, []);
+
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
@@ -71,14 +67,34 @@ const Dcanvas = () => {
         newSocket.on('disconnect', () => {
             console.log('Socket disconnected!');
         });
-    
+        newSocket.on('drawing-end', () => {
+            setDrawing(false);
+        })
+        newSocket.on('drawing-mouseDown', (data) => {
+            if (context) {
+                context.beginPath();
+                context.moveTo(data.lastX, data.lastY);
+            }
+            setDrawing(true);
+        })
+        newSocket.on('drawing-mouseMove', (data) => {
+            console.log(data, "dataMove");
+            if (context) {
+                context.lineTo(data.lastX, data.lastY);
+                context.stroke();
+            }
+        })
+        newSocket.on('clear', () => {
+            handleClearCanvas();
+        })
         setSocket(newSocket);
-    
+
         return () => {
             newSocket.disconnect();
         };
-    }, []);
-    
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [context]);
+
 
 
 
@@ -116,9 +132,9 @@ const Dcanvas = () => {
             context.beginPath();
             context.moveTo(offsetX, offsetY);
             setDrawing(true);
-            if(socket){
-            socket.emit('drawing', { lastX: offsetX, lastY: offsetY });}
-            
+            if (socket) {
+                socket.emit('drawing-mouseDown', { lastX: offsetX, lastY: offsetY });
+            }
         }
     };
 
@@ -128,10 +144,9 @@ const Dcanvas = () => {
             const { offsetX, offsetY } = getCoords(event);
             context.lineTo(offsetX, offsetY);
             context.stroke();
-            if(socket){
-            socket.emit('drawing', { lastX: offsetX, lastY: offsetY });
+            if (socket) {
+                socket.emit('drawing-mouseMove', { lastX: offsetX, lastY: offsetY });
             }
-        
         }
     };
 
@@ -150,6 +165,7 @@ const Dcanvas = () => {
             context.clearRect(0, 0, canvas.width, canvas.height);
             context.fillRect(0, 0, canvas.width, canvas.height);
             context.fillStyle = 'white';
+            socket.emit('clear');
         }
     };
     const getCoords = (event) => {
