@@ -218,8 +218,8 @@ const Dcanvas = () => {
     };
 
     return (
-        <div>
-            <div className='flex flex-col items-center justify-center'>
+        <div className='bg-bghome bg-cover ' style={{"backgroundImage":"URL('/src/assets/bgImg.jpg')"}}>
+            <div className='flex flex-col items-center justify-center' >
                 <div className='flex flex-col items-center justify-center p-3 w-full'><GuessWord inputString={guessWord} /></div>
                 <div className='flex flex-row'>
                     <canvas

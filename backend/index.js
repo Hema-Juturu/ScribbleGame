@@ -31,6 +31,16 @@ app.get('/api', (_, res) => {
     });
 });
 
+app.post('/api/submitName', (req, res) => {
+    const { name } = req.body;
+  
+    // Here you can handle the name as needed (e.g., save it to a database or process it)
+    console.log('Received name:', name);
+  
+    // Respond with a success message
+    res.status(200).json({ message: 'Name received!' });
+  });
+
 // Socket.io event handling
 io.on('connection', (socket) => {
     console.log("a user connected:", socket.id);
