@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
@@ -25,7 +25,7 @@ const Home = () => {
     };
 
     return (
-        <div className='bg-bghome bg-cover flex items-center justify-center h-screen' style={{ "backgroundImage": "URL('/src/assets/bgImg.jpg')" }}>
+        <div className='bg-bghome bg-cover flex items-center justify-center h-screen'>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <div className="flex gap-4">
                     <input

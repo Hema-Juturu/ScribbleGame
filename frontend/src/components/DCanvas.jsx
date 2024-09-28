@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUndo, faRedo } from '@fortawesome/free-solid-svg-icons';
-import GuessWord from './GuessWord';
 import io from 'socket.io-client';
 
 
@@ -12,7 +11,7 @@ const Dcanvas = () => {
     const [selectedColor, setSelectedColor] = useState('#000000'); // Initial color is black
     const [undoStack, setUndoStack] = useState([]); // State to store canvas states for undo
     const [redoStack, setRedoStack] = useState([]); // State to store canvas states for redo
-    const guessWord = 'Subhadra';
+    const [guessWord,setGuessWord]=useState([]);
     const [dimensions, setDimensions] = useState({
         width: window.innerWidth * 0.8,
         height: window.innerHeight * 0.8,
@@ -88,13 +87,13 @@ const Dcanvas = () => {
         newSocket.on('clear', () => {
             handleClearCanvas();
         })
-        newSocket.on('saveCanvas',()=>{
+        newSocket.on('saveCanvas', () => {
             const canvas = canvasRef.current;
             const imgData = context.getImageData(0, 0, canvas.width, canvas.height);
-        undoStack.push(imgData);
-        setUndoStack([...undoStack]);
+            undoStack.push(imgData);
+            setUndoStack([...undoStack]);
         })
-        newSocket.on('handleUndo',()=>{
+        newSocket.on('handleUndo', () => {
             if (undoStack.length > 0 && context) {
                 const lastState = undoStack.pop();
                 redoStack.push(context.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height));
@@ -102,13 +101,17 @@ const Dcanvas = () => {
                 context.putImageData(lastState, 0, 0);
             }
         })
-        newSocket.on('handleRedo',()=>{
+        newSocket.on('handleRedo', () => {
             if (redoStack.length > 0 && context) {
                 const nextState = redoStack.pop();
                 undoStack.push(context.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height));
                 setUndoStack([...undoStack]);
                 context.putImageData(nextState, 0, 0);
             }
+        })
+        newSocket.on('word', (data) => {
+            setGuessWord(data);
+            console.log(data);
         })
         setSocket(newSocket);
 
@@ -126,8 +129,7 @@ const Dcanvas = () => {
         const imgData = context.getImageData(0, 0, canvas.width, canvas.height);
         undoStack.push(imgData);
         setUndoStack([...undoStack]);
-        if(socket)
-        {
+        if (socket) {
             socket.emit('saveCanvas');
         }
     };
@@ -138,8 +140,7 @@ const Dcanvas = () => {
             redoStack.push(context.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height));
             setRedoStack([...redoStack]);
             context.putImageData(lastState, 0, 0);
-            if(socket)
-            {
+            if (socket) {
                 socket.emit('handleUndo');
             }
         }
@@ -151,8 +152,7 @@ const Dcanvas = () => {
             undoStack.push(context.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height));
             setUndoStack([...undoStack]);
             context.putImageData(nextState, 0, 0);
-            if(socket)
-            {
+            if (socket) {
                 socket.emit('handleRedo');
             }
         }
@@ -168,7 +168,7 @@ const Dcanvas = () => {
             context.moveTo(offsetX, offsetY);
             setDrawing(true);
             if (socket) {
-                socket.emit('drawing-mouseDown', { lastX: offsetX, lastY: offsetY ,color:selectedColor});
+                socket.emit('drawing-mouseDown', { lastX: offsetX, lastY: offsetY, color: selectedColor });
             }
         }
     };
@@ -180,7 +180,7 @@ const Dcanvas = () => {
             context.lineTo(offsetX, offsetY);
             context.stroke();
             if (socket) {
-                socket.emit('drawing-mouseMove', { lastX: offsetX, lastY: offsetY,color:selectedColor });
+                socket.emit('drawing-mouseMove', { lastX: offsetX, lastY: offsetY, color: selectedColor });
             }
         }
     };
@@ -218,9 +218,9 @@ const Dcanvas = () => {
     };
 
     return (
-        <div className='bg-bghome bg-cover ' style={{"backgroundImage":"URL('/src/assets/bgImg.jpg')"}}>
+        <div className='bg-bghome bg-cover'>
             <div className='flex flex-col items-center justify-center' >
-                <div className='flex flex-col items-center justify-center p-3 w-full'><GuessWord inputString={guessWord} /></div>
+                <div className='flex flex-col items-center justify-center p-3 w-full'>{guessWord}</div>
                 <div className='flex flex-row'>
                     <canvas
                         ref={canvasRef}

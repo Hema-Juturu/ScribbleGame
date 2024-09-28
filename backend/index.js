@@ -4,9 +4,10 @@ import dotenv from "dotenv";
 import path from "path";
 import http from "http";
 import { Server as SocketServer } from "socket.io";
+import { revealChars } from "./Word.js";
+import events from "events";
 
 dotenv.config();
-
 const app = express();
 const server = http.createServer(app);
 const io = new SocketServer(server);
@@ -33,16 +34,27 @@ app.get('/api', (_, res) => {
 
 app.post('/api/submitName', (req, res) => {
     const { name } = req.body;
-  
+
     // Here you can handle the name as needed (e.g., save it to a database or process it)
     console.log('Received name:', name);
-  
+
     // Respond with a success message
     res.status(200).json({ message: 'Name received!' });
-  });
+});
+
+var wordEvent = new events.EventEmitter();
+
+revealChars((word) => {
+    wordEvent.emit('update-word', word)
+});
 
 // Socket.io event handling
 io.on('connection', (socket) => {
+    const emitWord = (word) => {
+        socket.broadcast.emit('word', word);
+    }
+    wordEvent.on('update-word', emitWord);
+
     console.log("a user connected:", socket.id);
 
     socket.on('disconnect', () => {
@@ -61,20 +73,21 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('drawing-end');
     });
 
-    socket.on('saveCanvas',()=>{
+    socket.on('saveCanvas', () => {
         socket.broadcast.emit('saveCanvas');
     })
 
-    socket.on('handleUndo',()=>{
+    socket.on('handleUndo', () => {
         socket.broadcast.emit('handleUndo');
     })
-    socket.on('handleRedo',()=>{
+    socket.on('handleRedo', () => {
         socket.broadcast.emit('handleRedo');
     })
     socket.on('clear', () => {
         socket.broadcast.emit('clear');
     });
 });
+
 
 // Error handling for Socket.io
 io.engine.on("connection_error", (err) => {
