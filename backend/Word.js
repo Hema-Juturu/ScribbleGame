@@ -14,7 +14,7 @@ const revealChars = (callback) => {
             let a = reveal.join(' ')
             callback(a);
         } else {
-            clearInterval(revealInterval);
+            // clearInterval(revealInterval);
         }
     };
 

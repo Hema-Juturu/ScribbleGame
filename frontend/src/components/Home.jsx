@@ -1,31 +1,23 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import User from "./User";
+import { v4 as uuidv4 } from "uuid";
 const Home = () => {
     const [name, setName] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevent default form submission behavior
-
-        try {
-            await fetch('http://localhost:4000/api/submitName', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name }),
-            });
-
-            // Navigate to the new route after successful submission
-            navigate('/dcanvas');
-        } catch (error) {
-            console.error('Error sending name to backend:', error);
-        }
+        const id = uuidv4();
+        localStorage.setItem("uid", id)
+        localStorage.setItem("name", name)
+        // Navigate to the new route after successful submission
+        navigate('/channel');
     };
 
     return (
         <div className='bg-bghome bg-cover flex items-center justify-center h-screen'>
+            <User />
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <div className="flex gap-4">
                     <input

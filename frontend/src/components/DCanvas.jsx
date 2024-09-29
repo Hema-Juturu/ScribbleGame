@@ -2,16 +2,22 @@ import { useRef, useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUndo, faRedo } from '@fortawesome/free-solid-svg-icons';
 import io from 'socket.io-client';
+import User from './User';
+import { useParams } from 'react-router-dom';
+import Logout from './Logout';
 
 
 const Dcanvas = () => {
+    const { channelId } = useParams();
+    const name = localStorage.getItem("name");
+    const uuid = localStorage.getItem("uid");
     const canvasRef = useRef(null);
     const [context, setContext] = useState(null);
     const [drawing, setDrawing] = useState(false);
     const [selectedColor, setSelectedColor] = useState('#000000'); // Initial color is black
     const [undoStack, setUndoStack] = useState([]); // State to store canvas states for undo
     const [redoStack, setRedoStack] = useState([]); // State to store canvas states for redo
-    const [guessWord,setGuessWord]=useState([]);
+    const [guessWord, setGuessWord] = useState([]);
     const [dimensions, setDimensions] = useState({
         width: window.innerWidth * 0.8,
         height: window.innerHeight * 0.8,
@@ -58,6 +64,8 @@ const Dcanvas = () => {
     useEffect(() => {
         const newSocket = io('http://localhost:4000');
         newSocket.on('connect', () => {
+            newSocket.emit('connect-channel', { uuid, channelId });
+
             console.log('Socket connected!');
         });
         newSocket.on('connect_error', (err) => {
@@ -130,7 +138,7 @@ const Dcanvas = () => {
         undoStack.push(imgData);
         setUndoStack([...undoStack]);
         if (socket) {
-            socket.emit('saveCanvas');
+            socket.emit('saveCanvas', { channelId, uuid });
         }
     };
 
@@ -141,7 +149,7 @@ const Dcanvas = () => {
             setRedoStack([...redoStack]);
             context.putImageData(lastState, 0, 0);
             if (socket) {
-                socket.emit('handleUndo');
+                socket.emit('handleUndo', { channelId, uuid });
             }
         }
     };
@@ -153,7 +161,7 @@ const Dcanvas = () => {
             setUndoStack([...undoStack]);
             context.putImageData(nextState, 0, 0);
             if (socket) {
-                socket.emit('handleRedo');
+                socket.emit('handleRedo', { channelId, uuid });
             }
         }
     };
@@ -168,7 +176,7 @@ const Dcanvas = () => {
             context.moveTo(offsetX, offsetY);
             setDrawing(true);
             if (socket) {
-                socket.emit('drawing-mouseDown', { lastX: offsetX, lastY: offsetY, color: selectedColor });
+                socket.emit('drawing-mouseDown', { lastX: offsetX, lastY: offsetY, color: selectedColor, channelId, uuid });
             }
         }
     };
@@ -180,7 +188,7 @@ const Dcanvas = () => {
             context.lineTo(offsetX, offsetY);
             context.stroke();
             if (socket) {
-                socket.emit('drawing-mouseMove', { lastX: offsetX, lastY: offsetY, color: selectedColor });
+                socket.emit('drawing-mouseMove', { lastX: offsetX, lastY: offsetY, color: selectedColor, channelId, uuid });
             }
         }
     };
@@ -190,7 +198,7 @@ const Dcanvas = () => {
         if (drawing && context) {
             context.closePath();
             setDrawing(false);
-            socket.emit('drawing-end');
+            socket.emit('drawing-end', { channelId, uuid });
         }
     };
     const handleClearCanvas = () => {
@@ -200,7 +208,7 @@ const Dcanvas = () => {
             context.clearRect(0, 0, canvas.width, canvas.height);
             context.fillRect(0, 0, canvas.width, canvas.height);
             context.fillStyle = 'white';
-            socket.emit('clear');
+            socket.emit('clear', { channelId, uuid });
         }
     };
     const getCoords = (event) => {
@@ -219,8 +227,13 @@ const Dcanvas = () => {
 
     return (
         <div className='bg-bghome bg-cover'>
+            <User />
+            <Logout />
+            <div className='flex flex-col items-center justify-center p-3 w-full'>
+                <p className='text-3xl font-semibold'> Hi, {localStorage.getItem("name")} </p>
+            </div>
             <div className='flex flex-col items-center justify-center' >
-                <div className='flex flex-col items-center justify-center p-3 w-full'>{guessWord}</div>
+                <div className='flex flex-col items-center justify-center p-3 w-full'><span id="guessWord">{guessWord}</span></div>
                 <div className='flex flex-row'>
                     <canvas
                         ref={canvasRef}
