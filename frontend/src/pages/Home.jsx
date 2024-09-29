@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import User from "./User";
+import User from "/src/components/User";
 import { v4 as uuidv4 } from "uuid";
+
 const Home = () => {
     const [name, setName] = useState('');
     const navigate = useNavigate();

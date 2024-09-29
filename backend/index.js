@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import path from "path";
 import http from "http";
 import { Server as SocketServer } from "socket.io";
-import { revealChars } from "./Word.js";
+import { revealChars } from "./word.js";
 import events from "events";
 
 dotenv.config();

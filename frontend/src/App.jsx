@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Dcanvas from '/src/components/DCanvas'
-import Home from '/src/components/Home';
 import background from "/src/assets/bgImg.jpg";
-import Channel from '/src/components/Channel';
+import Home from '/src/pages/Home';
+import Dcanvas from '/src/pages/DCanvas'
+import Channel from '/src/pages/Channel';
 
 function App() {
     return (

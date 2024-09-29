@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import User from "./User";
-import Logout from "./Logout";
+import User from "/src/components/User";
+import Logout from "/src/components/Logout";
+
 const Channel = () => {
     const [channel, setChannel] = useState('');
     const navigate = useNavigate();

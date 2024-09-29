@@ -2,9 +2,9 @@ import { useRef, useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUndo, faRedo } from '@fortawesome/free-solid-svg-icons';
 import io from 'socket.io-client';
-import User from './User';
 import { useParams } from 'react-router-dom';
-import Logout from './Logout';
+import User from "/src/components/User";
+import Logout from "/src/components/Logout";
 
 
 const Dcanvas = () => {
@@ -62,7 +62,7 @@ const Dcanvas = () => {
     }, [])
 
     useEffect(() => {
-        const newSocket = io('http://localhost:4000');
+        const newSocket = io('/');
         newSocket.on('connect', () => {
             newSocket.emit('connect-channel', { uuid, channelId });
 
@@ -230,7 +230,7 @@ const Dcanvas = () => {
             <User />
             <Logout />
             <div className='flex flex-col items-center justify-center p-3 w-full'>
-                <p className='text-3xl font-semibold'> Hi, {localStorage.getItem("name")} </p>
+                <p className='text-3xl font-semibold'> Hi, {name} </p>
             </div>
             <div className='flex flex-col items-center justify-center' >
                 <div className='flex flex-col items-center justify-center p-3 w-full'><span id="guessWord">{guessWord}</span></div>
