@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import User from "/src/components/User";
 import Logout from "/src/components/Logout";
+import { TbArrowsJoin } from "react-icons/tb";
+import { IoMdAddCircleOutline } from "react-icons/io";
 
 const Channel = () => {
     const [channel, setChannel] = useState('');
@@ -31,9 +33,14 @@ const Channel = () => {
                         />
                         <button
                             type="submit"
-                            className="px-4 py-2 text-sm text-slate-200 bg-slate-800 border border-teal-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500 flex-shrink-0"
+                            className="flex px-4 py-2 text-sm text-slate-200 bg-slate-800 border border-teal-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500"
                         >
-                            Join Room &gt;&gt;
+                            <div className="h-full a-center">
+                                Join Room
+                            </div>
+                            <div className="h-full a-center pl-1 pt-[2px]">
+                                <TbArrowsJoin className="text-lg" />
+                            </div>
                         </button>
                     </div>
                 </form>
@@ -43,9 +50,14 @@ const Channel = () => {
                             const str = Math.floor(Math.random() * (10 ** 8)) + '';
                             navigate(`/dcanvas/${str}`);
                         }}
-                        className="px-4 py-2 text-sm text-slate-200 bg-slate-800 border border-teal-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500 flex-shrink-0"
+                        className="flex px-4 py-2 text-sm text-slate-200 bg-slate-800 border border-teal-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500"
                     >
-                        Create Room &gt;&gt;
+                        <div className="h-full a-center">
+                            Create Room
+                        </div>
+                        <div className="h-full a-center pl-1 pt-[2px]">
+                            <IoMdAddCircleOutline className="text-lg" />
+                        </div>
                     </button>
                 </div>
             </div>

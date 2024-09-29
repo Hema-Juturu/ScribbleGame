@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import User from "/src/components/User";
 import { v4 as uuidv4 } from "uuid";
+import { FaCirclePlay } from "react-icons/fa6";
 
 const Home = () => {
     const [name, setName] = useState('');
@@ -32,9 +33,14 @@ const Home = () => {
                     />
                     <button
                         type="submit"
-                        className="px-4 py-2 text-sm text-slate-200 bg-slate-800 border border-teal-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500 flex-shrink-0"
+                        className="flex justify-center px-4 py-2 text-sm text-slate-200 bg-slate-800 border border-teal-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500"
                     >
-                        PLAY &gt;&gt;
+                        <div className="h-full a-center">
+                            PLAY
+                        </div>
+                        <div className="h-full a-center pl-1 pt-[1px]">
+                            <FaCirclePlay />
+                        </div>
                     </button>
                 </div>
             </form>
