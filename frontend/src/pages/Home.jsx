@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import User from "/src/components/User";
 import { v4 as uuidv4 } from "uuid";
 import { FaCirclePlay } from "react-icons/fa6";
-
+import { PiRabbitThin } from "react-icons/pi";
+import { CiStar } from "react-icons/ci";
+import './home.css'
 const Home = () => {
     const [name, setName] = useState('');
     const navigate = useNavigate();
@@ -20,6 +22,8 @@ const Home = () => {
     return (
         <div className='bg-bghome bg-cover flex items-center justify-center h-screen'>
             <User />
+            <CiStar className="star"/>
+            <PiRabbitThin className="rabbit"/>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <div className="flex gap-4">
                     <input
