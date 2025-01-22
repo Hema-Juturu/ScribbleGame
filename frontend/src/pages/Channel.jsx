@@ -4,10 +4,13 @@ import User from "/src/components/User";
 import Logout from "/src/components/Logout";
 import { TbArrowsJoin } from "react-icons/tb";
 import { IoMdAddCircleOutline } from "react-icons/io";
+import { FaCirclePlay } from "react-icons/fa6";
+
 import Layout from "/src/Layouts/MainLayout";
 
 const Channel = () => {
   const [channel, setChannel] = useState("");
+  const [roomCode, setroomCode] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -18,12 +21,12 @@ const Channel = () => {
 
   return (
     <Layout>
-      <div className="w-screen h-screen a-center z-[1]">
+      <div className="w-screen h-screen a-center ">
         <User />
         <Logout />
-        <div>
+        <div className="z-50">
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div className="flex gap-4">
+            <div className="flex flex-col gap-4">
               <input
                 type="text"
                 id="first_name"
@@ -33,31 +36,56 @@ const Channel = () => {
                 placeholder="Enter Name"
                 required
               />
+          
+              <div className="flex flex-row">
+                <input
+                  type="text"
+                  id="roomCode"
+                  value={roomCode}
+                  onChange={(e) => setroomCode(e.target.value)}
+                  className="bg-gray-700 border border-gray-600 text-white text-sm rounded-full p-2.5 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 flex-1"
+                  placeholder="Enter Room code"
+                />
+                <button
+                  type="submit"
+                  className="flex justify-center px-4 py-2 text-sm text-slate-200 bg-slate-700 border border-cyan-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500"
+                  onClick={() => {
+                    navigate(`/dcanvas/${roomCode}`);
+                  }}
+                >
+                  <div className="h-full a-center">Join Room</div>
+                  <div className="h-full a-center pl-1 pt-[2px]">
+                    <TbArrowsJoin className="text-lg" />
+                  </div>
+                </button>
+              </div>
               <button
-                type="submit"
-                className="flex px-4 py-2 text-sm text-slate-200 bg-slate-800 border border-teal-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500"
+                onClick={() => {
+                  const str = Math.floor(Math.random() * 10 ** 8) + "";
+                  navigate(`/dcanvas/${str}`);
+                }}
+                className="flex justify-center px-4 py-2 text-sm text-slate-200 bg-slate-700 border border-cyan-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500"
               >
-                <div className="h-full a-center">Join Room</div>
+                <div className="h-full a-center">Create Room</div>
                 <div className="h-full a-center pl-1 pt-[2px]">
-                  <TbArrowsJoin className="text-lg" />
+                  <IoMdAddCircleOutline className="text-lg" />
                 </div>
               </button>
             </div>
-          </form>
-          <div className="a-center pt-8">
             <button
-              onClick={() => {
-                const str = Math.floor(Math.random() * 10 ** 8) + "";
-                navigate(`/dcanvas/${str}`);
-              }}
-              className="flex px-4 py-2 text-sm text-slate-200 bg-slate-800 border border-teal-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500"
-            >
-              <div className="h-full a-center">Create Room</div>
-              <div className="h-full a-center pl-1 pt-[2px]">
-                <IoMdAddCircleOutline className="text-lg" />
-              </div>
-            </button>
-          </div>
+                onClick={() => {
+                  navigate(`/dcanvas/${roomCode}`);
+                }}
+                className="flex justify-center px-4 py-2 text-sm text-slate-200 bg-cyan-600 border border-cyan-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500"
+              >
+                <div className="h-full a-center">PLAY</div>
+                <div className="h-full a-center pl-1 pt-[2px]">
+                  <FaCirclePlay className="text-lg" />
+                </div>
+              </button>
+          
+          </form>
+
         </div>
       </div>
     </Layout>

@@ -4,7 +4,7 @@
   }
   50% {
     stroke-dashoffset: 0;
-    fill: black;
+    fill: gray;
   }
   100% {
     stroke-dashoffset: 263;
@@ -17,7 +17,7 @@
   }
   50% {
     stroke-dashoffset: 0;
-    fill: black;
+    fill: gray;
   }
   100% {
     stroke-dashoffset: 1937;
@@ -52,7 +52,7 @@
   font-size: 100px;
   /* animation : 3s fillsvg linear; */
   fill: transparent;
-  stroke: black;
+  stroke: gray;
   stroke-width: 4;
   stroke-dasharray: 1983;
   animation: fillsvg 20s linear infinite;
@@ -61,7 +61,7 @@
 .star {
   font-size: 100px;
   fill: transparent;
-  stroke: #000;
+  stroke: gray;
   stroke-width: 0.5;
   stroke-dasharray: 114;
   animation: fillsvgstar 20s backwards infinite;
@@ -71,7 +71,7 @@
 .helicop {
   font-size: 80px;
   fill: transparent;
-  stroke: #000;
+  stroke: gray;
   stroke-width: 0.5;
   stroke-dasharray: 263;
   animation: fillsvgpanda 20s linear infinite;
@@ -80,7 +80,7 @@
 .alarm {
   font-size: 100px;
   fill: transparent;
-  stroke: #000;
+  stroke: gray;
   stroke-width: 0.5;
   stroke-dasharray: 1489;
   animation: fillsvgalarm 20s backwards infinite;

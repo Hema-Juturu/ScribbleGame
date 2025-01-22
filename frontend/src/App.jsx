@@ -1,6 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import background from "/src/assets/bgImg.jpg";
-import Home from '/src/pages/Home';
 import Dcanvas from '/src/pages/DCanvas'
 import Channel from '/src/pages/Channel';
 
@@ -24,7 +22,7 @@ function App() {
             >
                 <BrowserRouter>
                     <Routes>
-                        <Route path="/" element={<Home />} />
+                        <Route path="/" element={<Channel />} />
                         <Route path="/dcanvas/:channelId" element={<Dcanvas />} />
                         <Route path="/channel" element={<Channel/>}/>
                     </Routes>
