@@ -17,7 +17,7 @@ function App() {
             <div
                 style={{
                     width: '100vw',
-                    height: 'calc(100vh - 80px)',
+                    height: 'calc(80vh)',
                 }}
             >
                 <BrowserRouter>
