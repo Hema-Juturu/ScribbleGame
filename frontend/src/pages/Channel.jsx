@@ -7,6 +7,9 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import { FaCirclePlay } from "react-icons/fa6";
 
 import Layout from "/src/Layouts/MainLayout";
+const ShowRoomCode = ({ roomCode }) => {
+  return <div>room code is : {roomCode}</div>;
+};
 
 const Channel = () => {
   const [channel, setChannel] = useState("");
@@ -15,7 +18,6 @@ const Channel = () => {
 
   const handleSubmit = async (e) => {
     e?.preventDefault(); // Prevent default form submission behavior
-    // Navigate to the new route after successful submission
     navigate(`/dcanvas/${channel}`);
   };
 
@@ -36,7 +38,7 @@ const Channel = () => {
                 placeholder="Enter Name"
                 required
               />
-          
+              
               <div className="flex flex-row">
                 <input
                   type="text"
@@ -73,19 +75,18 @@ const Channel = () => {
               </button>
             </div>
             <button
-                onClick={() => {
-                  navigate(`/dcanvas/${roomCode}`);
-                }}
-                className="flex justify-center px-4 py-2 text-sm text-slate-200 bg-cyan-600 border border-cyan-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500"
-              >
-                <div className="h-full a-center">PLAY</div>
-                <div className="h-full a-center pl-1 pt-[2px]">
-                  <FaCirclePlay className="text-lg" />
-                </div>
-              </button>
-          
+              onClick={() => {
+                navigate(`/dcanvas/${roomCode}`);
+              }}
+              className="flex justify-center px-4 py-2 text-sm text-slate-200 bg-cyan-600 border border-cyan-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500"
+            >
+              <div className="h-full a-center">PLAY</div>
+              <div className="h-full a-center pl-1 pt-[2px]">
+                <FaCirclePlay className="text-lg" />
+              </div>
+            </button>
           </form>
-
+          <ShowRoomCode roomCode={roomCode} />
         </div>
       </div>
     </Layout>
