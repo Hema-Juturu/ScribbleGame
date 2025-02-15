@@ -8,7 +8,7 @@ const User = () => {
   useEffect(() => {
     const uuid = localStorage.getItem("uid");
     if (uuid && location.pathname == "/") {
-      navigate("/channel");
+      navigate("/");
     }
     if (!uuid) {
       navigate("/");

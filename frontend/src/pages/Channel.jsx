@@ -5,29 +5,45 @@ import Logout from "/src/components/Logout";
 import { TbArrowsJoin } from "react-icons/tb";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { FaCirclePlay } from "react-icons/fa6";
+import { FaClipboard } from "react-icons/fa6";
 
 import Layout from "/src/Layouts/MainLayout";
-const ShowRoomCode = ({ roomCode }) => {
-  return <div>room code is : {roomCode}</div>;
-};
+
+
 
 const Channel = () => {
   const [channel, setChannel] = useState("");
   const [roomCode, setroomCode] = useState("");
+  const [joinRoom,setJoinRoom]=useState("");
+  const [buttonText, setButtonText] = useState('Room not created');
   const navigate = useNavigate();
-
-  const handleSubmit = async (e) => {
-    e?.preventDefault(); // Prevent default form submission behavior
-    navigate(`/dcanvas/${channel}`);
+  const copyText = async () => {
+    if(!roomCode){
+      setButtonText('Create Room to copy!');
+      // Reset button text after 2 seconds
+      setTimeout(() => {
+        setButtonText('Room not created');
+      }, 2000);
+      return 
+    }
+    try {
+      await navigator.clipboard.writeText(roomCode);
+      console.log(roomCode, 'Text copied to clipboard!');
+      setButtonText('Copied!');
+      // Reset button text after 2 seconds
+      setTimeout(() => {
+        setButtonText('Copy Room Link');
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to Copy Room Link: ', err);
+    }
   };
-
   return (
     <Layout>
       <div className="w-screen h-screen a-center ">
         <User />
         <Logout />
         <div className="z-50">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="flex flex-col gap-4">
               <input
                 type="text"
@@ -43,16 +59,16 @@ const Channel = () => {
                 <input
                   type="text"
                   id="roomCode"
-                  value={roomCode}
-                  onChange={(e) => setroomCode(e.target.value)}
-                  className="bg-gray-700 border border-gray-600 text-white text-sm rounded-full p-2.5 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 flex-1"
-                  placeholder="Enter Room code"
+                  value={joinRoom}
+                  onChange={(e) => setJoinRoom(e.target.value)}
+                  className="bg-gray-700 border  border-gray-600 text-white text-sm rounded-full p-2.5 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 flex-1"
+                  placeholder="Enter Room Link"
                 />
                 <button
                   type="submit"
-                  className="flex justify-center px-4 py-2 text-sm text-slate-200 bg-slate-700 border border-cyan-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500"
+                  className="flex justify-center px-4 py-2 m-1 text-sm text-slate-200 bg-slate-700 border border-cyan-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500"
                   onClick={() => {
-                    navigate(`/dcanvas/${roomCode}`);
+                    navigate(`${joinRoom}`);
                   }}
                 >
                   <div className="h-full a-center">Join Room</div>
@@ -63,8 +79,9 @@ const Channel = () => {
               </div>
               <button
                 onClick={() => {
-                  const str = Math.floor(Math.random() * 10 ** 8) + "";
-                  navigate(`/dcanvas/${str}`);
+                  const str = "/dcanvas/"+Math.floor(Math.random() * 10 ** 8);
+                  setButtonText('Copy Room Link');
+                  setroomCode(str);
                 }}
                 className="flex justify-center px-4 py-2 text-sm text-slate-200 bg-slate-700 border border-cyan-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500"
               >
@@ -73,10 +90,10 @@ const Channel = () => {
                   <IoMdAddCircleOutline className="text-lg" />
                 </div>
               </button>
-            </div>
+           
             <button
               onClick={() => {
-                navigate(`/dcanvas/${roomCode}`);
+                navigate(`${roomCode}`);
               }}
               className="flex justify-center px-4 py-2 text-sm text-slate-200 bg-cyan-600 border border-cyan-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500"
             >
@@ -85,8 +102,16 @@ const Channel = () => {
                 <FaCirclePlay className="text-lg" />
               </div>
             </button>
-          </form>
-          <ShowRoomCode roomCode={roomCode} />
+            <button
+               onClick={()=>{copyText()}}
+               className="flex gap-4 justify-center px-4 py-2 text-sm text-slate-200 bg-slate-700 border border-cyan-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500"
+             >
+               <div className="h-full a-center">{buttonText}</div>
+               <div className="h-full a-center pl-1 pt-[2px]">
+                 <FaClipboard className="text-lg"/>
+               </div>
+             </button>
+          </div>
         </div>
       </div>
     </Layout>

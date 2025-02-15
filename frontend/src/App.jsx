@@ -24,7 +24,7 @@ function App() {
                     <Routes>
                         <Route path="/" element={<Channel />} />
                         <Route path="/dcanvas/:channelId" element={<Dcanvas />} />
-                        <Route path="/channel" element={<Channel/>}/>
+                        {/* <Route path="/channel" element={<Channel/>}/> */}
                     </Routes>
                 </BrowserRouter>
             </div>
