@@ -20,7 +20,6 @@ const Channel = () => {
   const copyText = async () => {
     if(!roomCode){
       setButtonText('Create Room to copy!');
-      // Reset button text after 2 seconds
       setTimeout(() => {
         setButtonText('Room not created');
       }, 2000);
@@ -30,7 +29,6 @@ const Channel = () => {
       await navigator.clipboard.writeText(roomCode);
       console.log(roomCode, 'Text copied to clipboard!');
       setButtonText('Copied!');
-      // Reset button text after 2 seconds
       setTimeout(() => {
         setButtonText('Copy Room Link');
       }, 2000);
