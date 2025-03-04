@@ -12,11 +12,13 @@ import Layout from "/src/Layouts/MainLayout";
 
 
 const Channel = () => {
-  const [channel, setChannel] = useState("");
+  const [firstName, setFirstName] = useState("");
   const [roomCode, setroomCode] = useState("");
   const [joinRoom,setJoinRoom]=useState("");
+  const [nameError, setNameError] = useState("Enter name");
   const [buttonText, setButtonText] = useState('Room not created');
   const navigate = useNavigate();
+ 
   const copyText = async () => {
     if(!roomCode){
       setButtonText('Create Room to copy!');
@@ -46,13 +48,13 @@ const Channel = () => {
               <input
                 type="text"
                 id="first_name"
-                value={channel}
-                onChange={(e) => setChannel(e.target.value)}
+                value={firstName}
+                onChange={(e) => {setFirstName(e.target.value) ;setNameError("");}}
                 className="bg-gray-700 border border-gray-600 text-white text-sm rounded-full p-2.5 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 flex-1"
-                placeholder="Enter Name"
+                placeholder={nameError}
                 required
               />
-              
+               
               <div className="flex flex-row">
                 <input
                   type="text"
@@ -77,9 +79,14 @@ const Channel = () => {
               </div>
               <button
                 onClick={() => {
+                  if (firstName.trim() === "") {
+                    setNameError("Name is required to create a room.");
+                    return; 
+                  }
                   const str = "/dcanvas/"+Math.floor(Math.random() * 10 ** 8);
                   setButtonText('Copy Room Link');
                   setroomCode(str);
+                  localStorage.setItem("name",firstName)
                 }}
                 className="flex justify-center px-4 py-2 text-sm text-slate-200 bg-slate-700 border border-cyan-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500"
               >

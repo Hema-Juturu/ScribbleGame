@@ -25,6 +25,24 @@ const Dcanvas = () => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
+    if (name && uuid) {
+      console.log("uuid",uuid);
+      fetch('/api/submitName', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: name,
+          id: uuid,
+        }),
+      })
+        .then(response => response.json())
+        .then(data => console.log('Server response:', data))
+        .catch(error => console.error('Error:', error));
+    }
+  }, [name, uuid]); // Only run when `name` or `uuid` changes
+  useEffect(() => {
     const handleBeforeUnload = (event) => {
       // Cancel the event
       event.preventDefault();
@@ -85,7 +103,6 @@ const Dcanvas = () => {
       setDrawing(true);
     });
     newSocket.on("drawing-mouseMove", (data) => {
-      console.log(data, "dataMove");
       if (context) {
         context.lineTo(data.lastX, data.lastY);
         context.stroke();
@@ -132,7 +149,6 @@ const Dcanvas = () => {
     });
     newSocket.on("word", (data) => {
       setGuessWord(data);
-      console.log(data);
     });
     setSocket(newSocket);
 
@@ -270,8 +286,8 @@ const Dcanvas = () => {
           <p className="text-3xl font-semibold"> Hi, {name} </p>
         </div>
         <div className="flex flex-col items-center justify-center">
-          <div className="flex flex-col items-center justify-center p-3 w-full">
-            <span id="guessWord">{guessWord}</span>
+          <div className="flex flex-col items-center justify-center z-50 p-3 w-full bg-white">
+            <span id="guessWord" className="z-50 bg-white">{guessWord}</span>
           </div>
           <div className="flex flex-row">
             <canvas

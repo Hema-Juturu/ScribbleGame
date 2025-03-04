@@ -56,7 +56,6 @@ io.on('connection', (socket) => {
     }
     wordEvent.on('update-word', emitWord);
 
-    console.log("a user connected:", socket.id);
     socket.on('init', (data) => {
         
         console.log('init', data);
@@ -79,6 +78,8 @@ io.on('connection', (socket) => {
         clients.set(uuid, socket)
         channels.set(uuid, channelId)
     })
+    console.log("a user connected:", socket.id," ",clients.size,channels.size);
+
     socket.on('leave-channel', ({ uuid }) => {
         if (!uuid) {
             return
