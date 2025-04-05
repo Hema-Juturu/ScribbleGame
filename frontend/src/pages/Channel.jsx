@@ -6,8 +6,8 @@ import { TbArrowsJoin } from "react-icons/tb";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { FaCirclePlay } from "react-icons/fa6";
 import { FaClipboard } from "react-icons/fa6";
-
 import Layout from "/src/Layouts/MainLayout";
+import Modal from "/src/Modals/Modal";
 
 
 
@@ -18,7 +18,15 @@ const Channel = () => {
   const [nameError, setNameError] = useState("Enter name");
   const [buttonText, setButtonText] = useState('Room not created');
   const navigate = useNavigate();
- 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
   const copyText = async () => {
     if(!roomCode){
       setButtonText('Create Room to copy!');
@@ -64,6 +72,11 @@ const Channel = () => {
                   className="bg-gray-700 border  border-gray-600 text-white text-sm rounded-full p-2.5 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500 flex-1"
                   placeholder="Enter Room Link"
                 />
+                 <Modal
+                   isOpen={isModalOpen}
+                   onClose={handleCloseModal}
+                   nav={joinRoom}
+                 />
                 <button
                   type="submit"
                   className="flex justify-center px-4 py-2 m-1 text-sm text-slate-200 bg-slate-700 border border-cyan-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500"
@@ -87,6 +100,7 @@ const Channel = () => {
                   setButtonText('Copy Room Link');
                   setroomCode(str);
                   localStorage.setItem("name",firstName)
+                  handleOpenModal()
                 }}
                 className="flex justify-center px-4 py-2 text-sm text-slate-200 bg-slate-700 border border-cyan-400 rounded-full ring-2 ring-teal-400 hover:ring-4 focus:ring-teal-500"
               >
